@@ -1,0 +1,42 @@
+<div class="navigate">
+  <div class="wrapper">
+    <div class="navigate__body">
+      <p class="logo">YandexMap</p>
+      <p class="title">Чтобы добавить метку кликните на карту. Чтобы удалить метку кликните по ней правой клавишей мыши</p>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper">
+  <div class="flex">
+    <div class="map">
+      <ya-map 
+        [center]="[55.751952, 37.600739]" 
+        [zoom]="12"
+        (ready)="onMapReady($event)"
+        (yaclick)="showCoordinates($event)"
+      >
+        <ya-placemark 
+          *ngFor="let placemark of placemarks"
+          [geometry]="placemark.geometry"
+          [properties]="placemark.properties"
+          [options]="placemark.options"
+          (yacontextmenu)="deletePlacemark(placemark)"
+        ></ya-placemark>
+      </ya-map>
+    </div>
+    <div class="form" *ngIf="isForm">
+      <div class="flex">
+        <p class="coords">lat: &nbsp;<strong>{{coords[0]}}</strong> <br>lon: <strong>{{coords[1]}}</strong></p>
+        <button class="cross__btn" (click)="isForm = false">X</button>
+      </div>
+      <form [formGroup]="placemarkForm" novalidate (ngSubmit)="addPlacemark()">
+        <input type="text" placeholder="Header" formControlName="header">
+        <input type="text" placeholder="Body" formControlName="body">
+        <input type="text" placeholder="Footer" formControlName="footer">
+        <input type="text" placeholder="Placeholder" formControlName="placeholder">
+        <button [disabled]="placemarkForm.invalid" class="form__btn">Добавить метку</button>
+      </form>
+    </div>
+  </div>
+</div>
